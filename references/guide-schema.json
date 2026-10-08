@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TripTonic Guide",
+  "type": "object",
+  "required": ["schema_version", "meta", "preferences", "sources", "days"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "meta": {
+      "type": "object",
+      "required": ["title", "destination", "language", "start_date", "days"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "subtitle": {"type": "string"},
+        "destination": {"type": "string", "minLength": 1},
+        "origin": {"type": "string"},
+        "language": {"type": "string"},
+        "start_date": {"type": "string", "format": "date"},
+        "days": {"type": "integer", "minimum": 1},
+        "travelers": {"type": "integer", "minimum": 1},
+        "currency": {"type": "string"},
+        "timezone": {"type": "string"},
+        "assumptions": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "preferences": {
+      "type": "object",
+      "properties": {
+        "budget_level": {"enum": ["economy", "balanced", "comfortable", "premium", "unknown"]},
+        "pace": {"enum": ["relaxed", "balanced", "intensive"]},
+        "group_type": {"type": "string"},
+        "party_summary": {"type": "string"},
+        "interests": {"type": "array", "items": {"type": "string"}},
+        "dietary": {"type": "array", "items": {"type": "string"}},
+        "accessibility": {"type": "array", "items": {"type": "string"}},
+        "transport": {"type": "array", "items": {"type": "string"}},
+        "earliest_start": {"type": "string", "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"},
+        "latest_end": {"type": "string", "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"}
+      },
+      "additionalProperties": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "type", "checked_at"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "url": {"type": "string"},
+          "type": {"enum": ["official", "search", "user", "estimate", "general"]},
+          "checked_at": {"type": "string", "format": "date"},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "media": {
+            "type": "array",
+            "description": "Image/video links exactly as returned by the source notes during research. Linked in the guide, never embedded or copied; signed links expire.",
+            "items": {
+              "type": "object",
+              "required": ["type", "url"],
+              "properties": {
+                "type": {"enum": ["image", "video"]},
+                "url": {"type": "string", "pattern": "^https?://"},
+                "description": {"type": "string"}
+              },
+              "additionalProperties": true
+            }
+          },
+          "notes": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "route": {
+      "type": "object",
+      "description": "Overall route and source-backed route legs. Durations must be verified or explicitly estimated. Preferred mode tokens: drive, walk, bus, metro, train, flight, taxi, bike, boat, cable_car, shuttle (Chinese synonyms such as 自驾/步行/火车 are accepted and normalized by the validator).",
+      "properties": {
+        "overview": {"type": "string"},
+        "stops": {"type": "array", "items": {"type": "object", "required": ["name"], "properties": {"name": {"type": "string"}, "day": {"type": "integer"}, "coords": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2}, "source_ids": {"type": "array", "items": {"type": "string"}}, "notes": {"type": "string"}}, "additionalProperties": true}},
+        "legs": {"type": "array", "items": {"type": "object", "required": ["from", "to"], "properties": {"from": {"type": "string"}, "to": {"type": "string"}, "mode": {"type": "string", "description": "Free text accepted; canonical tokens are drive, walk, bus, metro, train, flight, taxi, bike, boat, cable_car, shuttle."}, "duration_min": {"type": "integer", "minimum": 0}, "duration_text": {"type": "string"}, "distance_km": {"type": "number", "minimum": 0}, "estimated": {"type": "boolean"}, "source_ids": {"type": "array", "items": {"type": "string"}}, "notes": {"type": "string"}}, "additionalProperties": true}},
+        "caveats": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "images": {"type": "array", "items": {"type": "object", "required": ["title", "path", "alt"], "properties": {"title": {"type": "string"}, "path": {"type": "string"}, "alt": {"type": "string"}, "caption": {"type": "string"}, "source_ids": {"type": "array", "items": {"type": "string"}}, "license": {"type": "string"}}, "additionalProperties": true}},
+    "businesses": {"type": "array", "items": {"type": "object", "required": ["name", "category"], "properties": {"name": {"type": "string"}, "category": {"type": "string"}, "address": {"type": "string"}, "hours": {"type": "string"}, "phone": {"type": "string"}, "price": {"type": "string"}, "reason": {"type": "string"}, "checked_at": {"type": "string", "format": "date"}, "source_ids": {"type": "array", "items": {"type": "string"}}, "confidence": {"enum": ["high", "medium", "low"]}}, "additionalProperties": true}},
+    "days": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["day", "date", "title", "items"],
+        "properties": {
+          "day": {"type": "integer", "minimum": 1},
+          "date": {"type": "string", "format": "date"},
+          "title": {"type": "string"},
+          "backup": {"type": "array", "description": "Day-level backup options for weather, closure or fatigue.", "items": {"type": "object", "required": ["plan"], "properties": {"condition": {"type": "string"}, "plan": {"type": "string"}, "source_ids": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": true}},
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "start", "end"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "type": {"enum": ["spot", "meal", "transport", "hotel", "activity", "rest"]},
+                "start": {"type": "string", "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"},
+                "end": {"type": "string", "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"},
+                "description": {"type": "string"},
+                "price": {"type": "string"},
+                "route_from_previous": {"type": "object", "description": "Transfer buffer from the previous item (or lodging to the first item of the day).", "properties": {"mode": {"type": "string", "description": "Free text accepted; canonical tokens are drive, walk, bus, metro, train, flight, taxi, bike, boat, cable_car, shuttle."}, "duration_min": {"type": "integer", "minimum": 0}, "duration_text": {"type": "string"}, "distance_km": {"type": "number", "minimum": 0}, "estimated": {"type": "boolean"}, "source_ids": {"type": "array", "items": {"type": "string"}}, "notes": {"type": "string"}}, "additionalProperties": true},
+                "backup": {"type": "array", "description": "Item-level backup options (weather, closure, fatigue).", "items": {"type": "object", "required": ["plan"], "properties": {"condition": {"type": "string"}, "plan": {"type": "string"}, "source_ids": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": true}},
+                "coords": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+                "source_ids": {"type": "array", "items": {"type": "string"}},
+                "recommendation": {"enum": ["must", "recommended", "optional", "skip"]},
+                "confidence": {"enum": ["high", "medium", "low"]},
+                "estimated": {"type": "boolean"}
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "description": "Pre-trip reminders; entries with a valid date become all-day calendar events.",
+      "items": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "detail": {"type": "string"},
+          "date": {"type": "string", "format": "date"},
+          "phase": {"type": "string"},
+          "source_ids": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Evidence cards linking claims to sources, rendered in the guide output.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "topic": {"type": "string"},
+          "claim": {"type": "string"},
+          "summary": {"type": "string"},
+          "status": {"type": "string"},
+          "checked_at": {"type": "string", "format": "date"},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "caveat": {"type": "string"},
+          "source_ids": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "transport": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "hotels": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "foods": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "avoid": {"type": "array", "items": {"type": "object", "additionalProperties": true, "properties": {"wrong": {"type": "string", "description": "要避开的坑（规范写法，与 right 配对）"}, "right": {"type": "string", "description": "替代做法（规范写法，与 wrong 配对）"}, "name": {"type": "string", "description": "坑的名称（兼容写法，与 reason 配对）"}, "reason": {"type": "string", "description": "坑的说明与替代做法（兼容写法，与 name 配对）"}, "checked_at": {"type": "string", "format": "date"}, "source_ids": {"type": "array", "items": {"type": "string"}}}, "description": "避坑条目：wrong+right 或 name+reason 二选一（渲染两种都支持，缺失会触发 AVOID_STRUCTURE 警告）"}},
+    "tips": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

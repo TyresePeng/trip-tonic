@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TripTonic Research Record",
+  "type": "object",
+  "required": ["meta", "searches", "notes"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "meta": {
+      "type": "object",
+      "required": ["destination", "created_at"],
+      "properties": {
+        "destination": {"type": "string", "minLength": 1},
+        "created_at": {"type": "string", "format": "date"},
+        "trip_days": {"type": "integer", "minimum": 1},
+        "party_summary": {"type": "string"},
+        "output_dir": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "searches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "checked_at", "topic"],
+        "properties": {
+          "query": {"type": "string", "minLength": 1},
+          "checked_at": {"type": "string", "format": "date"},
+          "topic": {"enum": ["itinerary", "attractions", "food", "lodging", "transport", "conditions", "pitfalls"]},
+          "filters": {"type": "string"},
+          "result_count": {"type": "integer", "minimum": 0},
+          "candidate_ids": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "title", "checked_at", "inspection"],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "url": {"type": "string"},
+          "author": {"type": "string"},
+          "published_at": {"type": "string"},
+          "checked_at": {"type": "string", "format": "date"},
+          "inspection": {"enum": ["search_card_only", "full_note_opened", "comments_opened"]},
+          "commercial_context": {"enum": ["unknown", "disclosed", "suspected", "none_observed"]},
+          "first_hand_context": {"type": "string"},
+          "media": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "url"],
+              "properties": {
+                "type": {"enum": ["image", "video"]},
+                "url": {"type": "string", "pattern": "^https?://"},
+                "description": {"type": "string"}
+              },
+              "additionalProperties": true
+            }
+          },
+          "observations": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+          "queries_found_by": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "evidence_cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "claim"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "topic": {"type": "string"},
+          "claim": {"type": "string", "minLength": 1},
+          "kind": {"type": "string"},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "freshness": {"type": "string"},
+          "checked_at": {"type": "string", "format": "date"},
+          "source_ids": {"type": "array", "items": {"type": "string"}},
+          "caveat": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["decision_id", "candidate"],
+        "properties": {
+          "decision_id": {"type": "string", "minLength": 1},
+          "candidate": {"type": "string", "minLength": 1},
+          "party_fit": {"enum": ["must", "recommended", "optional", "skip"]},
+          "reason": {"type": "string"},
+          "supporting_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "contrary_or_qualifying_evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "source_ids": {"type": "array", "items": {"type": "string"}},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "unresolved_checks": {"type": "array", "items": {"type": "string"}},
+          "backup": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "disagreements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "topic": {"type": "string"},
+          "supporting": {"type": "array", "items": {"type": "string"}},
+          "contrary": {"type": "array", "items": {"type": "string"}},
+          "differences": {"type": "string"},
+          "treatment": {"type": "string"},
+          "remaining_check": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "gaps": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

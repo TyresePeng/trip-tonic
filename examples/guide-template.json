@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "title": "请替换：行程标题",
+    "subtitle": "来源可查 · 估算有标记 · 待核实事项明确",
+    "destination": "请替换：目的地",
+    "origin": "请替换：出发地或未提供",
+    "language": "zh-CN",
+    "start_date": "2026-09-23",
+    "days": 1,
+    "travelers": 1,
+    "currency": "CNY",
+    "timezone": "Asia/Shanghai",
+    "assumptions": ["模板示例日期和人数不是用户行程信息，使用前必须替换"]
+  },
+  "preferences": {
+    "budget_level": "unknown",
+    "pace": "balanced",
+    "party_summary": "请替换：同行人、体力及无障碍需求",
+    "interests": [],
+    "dietary": [],
+    "accessibility": [],
+    "transport": []
+  },
+  "sources": [],
+  "route": {
+    "overview": "请替换：总体路线；没有可靠路线信息时注明待核实",
+    "stops": [],
+    "legs": [],
+    "caveats": ["模板未包含任何真实调研或路线事实"]
+  },
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-09-23",
+      "title": "请替换：当日主题",
+      "items": [
+        {
+          "name": "请替换：行程项",
+          "type": "activity",
+          "start": "10:00",
+          "end": "11:00",
+          "description": "请填写有来源支持的安排，或明确标注为待核实/一般建议。",
+          "source_ids": []
+        }
+      ]
+    }
+  ],
+  "transport": [],
+  "hotels": [],
+  "foods": [],
+  "businesses": [],
+  "avoid": [],
+  "checklist": [],
+  "evidence": [],
+  "tips": ["出发前核验开放、票务、交通、天气及安全相关信息。"],
+  "assumptions": ["这是空白结构模板，不代表已经完成研究。"]
+}

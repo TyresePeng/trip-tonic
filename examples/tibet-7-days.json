@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "title": "西藏七日慢行 · 拉萨往返",
+    "subtitle": "首次到访参考路线；先适应，再逐步增加活动强度",
+    "destination": "西藏（拉萨往返）",
+    "origin": "未提供",
+    "language": "zh-CN",
+    "start_date": "2026-09-23",
+    "days": 7,
+    "travelers": 3,
+    "currency": "CNY",
+    "timezone": "Asia/Shanghai",
+    "assumptions": [
+      "出发日期仅为构建样例，不代表用户实际日期",
+      "队伍暂按2位成人和1位约65岁成人示例，身体状况与高原适应能力未确认",
+      "路线点位与时长未经过实时小红书或官方调研，作为结构示例，不可直接用于出行"
+    ]
+  },
+  "preferences": {
+    "budget_level": "balanced",
+    "pace": "balanced",
+    "group_type": "首次到访成人同行",
+    "party_summary": "示例队伍：2位成人及1位约65岁成人；需确认实际成员、健康与步行能力",
+    "interests": ["人文", "湖泊", "轻松观光"],
+    "dietary": [],
+    "accessibility": ["控制连续步行", "预留休息时间"],
+    "transport": ["包车", "当地交通"],
+    "earliest_start": "08:00",
+    "latest_end": "20:00"
+  },
+  "route": {
+    "overview": "结构示例：拉萨 → 周边目的地 → 拉萨；请替换为已研究路线。",
+    "stops": [
+      {"name": "拉萨", "day": 1, "source_ids": ["sample-general"]},
+      {"name": "周边目的地（占位）", "day": 4, "source_ids": ["sample-note"]},
+      {"name": "拉萨", "day": 7, "source_ids": ["sample-general"]}
+    ],
+    "legs": [
+      {"from": "拉萨", "to": "周边目的地（占位）", "mode": "自驾", "estimated": true, "source_ids": ["sample-note"], "notes": "时长待核实，不可作导航使用。"},
+      {"from": "周边目的地（占位）", "to": "拉萨", "mode": "自驾", "estimated": true, "source_ids": ["sample-note"], "notes": "时长待核实，不可作导航使用。"}
+    ],
+    "caveats": ["本示例路线不是实际建议；真实攻略应提供来源支持的时长或留空并说明待核实。"]
+  },
+  "sources": [
+    {
+      "id": "sample-note",
+      "title": "样例占位：替换为实际阅读的小红书笔记标题",
+      "url": "https://www.xiaohongshu.com/",
+      "type": "user",
+      "checked_at": "2026-09-23",
+      "confidence": "low",
+      "media": [
+        {
+          "type": "image",
+          "url": "https://sns-img.example.com/fictional-cover-image.jpg",
+          "description": "（虚构示例）笔记首图：布达拉宫广场清晨"
+        },
+        {
+          "type": "video",
+          "url": "https://sns-video.example.com/fictional-note-video.mp4",
+          "description": "（虚构示例）笔记视频：市区到达流程实拍"
+        }
+      ],
+      "notes": "仅用于演示 schema；不是实际调研来源。构建真实攻略前必须替换。"
+    },
+    {
+      "id": "sample-general",
+      "title": "样例占位：出发前核验官方景区与交通信息",
+      "url": "https://www.gov.cn/",
+      "type": "general",
+      "checked_at": "2026-09-23",
+      "confidence": "low",
+      "notes": "占位来源，不支持任何具体开放、价格或安全结论。"
+    }
+  ],
+  "transport": [
+    {
+      "mode": "round_trip",
+      "title": "拉萨往返",
+      "detail": "抵达方式、班次和当地接驳待用户确认；不在此样例中假设航班或火车班次。",
+      "price": "待核实",
+      "recommended": true,
+      "source_ids": ["sample-general"]
+    }
+  ],
+  "hotels": [
+    {
+      "area": "拉萨市区（待结合路线与实际需求选择）",
+      "price": "待核实",
+      "reason": "样例占位：真实方案应比较交通便利性、休息条件和同行者需求。",
+      "connection": "酒店与路线衔接待调研",
+      "source_ids": ["sample-note"]
+    }
+  ],
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-09-23",
+      "title": "抵达拉萨 · 留白休息",
+      "items": [
+        {"name": "抵达与入住", "type": "transport", "start": "14:00", "end": "15:00", "description": "抵达方式和接驳时间待确认；样例建议把首日留白。", "recommendation": "recommended", "confidence": "low", "source_ids": ["sample-general"]},
+        {"name": "休息与补给", "type": "rest", "start": "15:30", "end": "18:00", "description": "具体休息安排根据个人状态调整。本样例不提供医疗判断。", "recommendation": "must", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    },
+    {
+      "day": 2,
+      "date": "2026-09-24",
+      "title": "拉萨市区 · 低强度活动占位",
+      "items": [
+        {"name": "市区轻松活动（待调研后填写）", "type": "activity", "start": "10:00", "end": "11:30", "description": "地点、预约要求、步行量及是否开放均待核验。", "recommendation": "optional", "confidence": "low", "source_ids": ["sample-note"]},
+        {"name": "午休与状态评估", "type": "rest", "start": "12:00", "end": "15:00", "description": "按队伍体力安排休息；有不适时停止活动并寻求专业帮助。", "recommendation": "recommended", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    },
+    {
+      "day": 3,
+      "date": "2026-09-25",
+      "title": "拉萨周边 · 目的地待确认",
+      "items": [
+        {"name": "周边点位（待官方开放与路线核实）", "type": "spot", "start": "09:30", "end": "11:30", "description": "请根据实际调研补充地点、海拔变化、驾驶时间、预约和适老条件。", "recommendation": "optional", "confidence": "low", "estimated": true, "source_ids": ["sample-note", "sample-general"]},
+        {"name": "返回休息", "type": "rest", "start": "15:00", "end": "17:00", "description": "交通时长待核实，保留机动时间。", "recommendation": "recommended", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    },
+    {
+      "day": 4,
+      "date": "2026-09-26",
+      "title": "拉萨周边 · 轻松备选日",
+      "backup": [{"condition": "天气或团队状态不佳", "plan": "本日可整体替换为市区低强度活动或休息"}],
+      "items": [
+        {"name": "经来源验证的半日活动", "type": "activity", "start": "10:00", "end": "12:00", "description": "此处应填写对同行者适配的真实地点与证据。", "recommendation": "optional", "confidence": "low", "source_ids": ["sample-note"], "backup": [{"condition": "闭馆或天气不佳", "plan": "改为市区博物馆类室内活动"}]},
+        {"name": "机动与休息", "type": "rest", "start": "14:00", "end": "17:00", "description": "天气、交通或身体状态不合适时使用。", "recommendation": "recommended", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    },
+    {
+      "day": 5,
+      "date": "2026-09-27",
+      "title": "长距离路线候选 · 暂不锁定",
+      "items": [
+        {"name": "远郊路线候选（需确认交通与团队适应情况）", "type": "transport", "start": "08:00", "end": "10:00", "description": "路线、道路状况、返程时间及高海拔停留均需可靠来源验证；缺少证据时不安排。", "recommendation": "optional", "confidence": "low", "estimated": true, "source_ids": ["sample-note", "sample-general"]},
+        {"name": "返程缓冲", "type": "rest", "start": "16:00", "end": "18:00", "description": "不要把未核实的估算驾驶时间当作安全行程。", "recommendation": "must", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    },
+    {
+      "day": 6,
+      "date": "2026-09-28",
+      "title": "拉萨机动日",
+      "items": [
+        {"name": "按前几日状态选择市区活动", "type": "activity", "start": "10:00", "end": "12:00", "description": "状态不佳则休息；地点需按实际研究和官方信息补全。", "recommendation": "optional", "confidence": "low", "source_ids": ["sample-note"]},
+        {"name": "整理与休息", "type": "rest", "start": "15:00", "end": "17:00", "description": "为返程预留缓冲。", "recommendation": "recommended", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    },
+    {
+      "day": 7,
+      "date": "2026-09-29",
+      "title": "拉萨返程",
+      "items": [
+        {"name": "前往交通枢纽", "type": "transport", "start": "09:00", "end": "10:00", "description": "实际班次、到达时间和接驳请以出票信息及交通方通知为准。", "recommendation": "must", "confidence": "low", "source_ids": ["sample-general"]}
+      ]
+    }
+  ],
+  "foods": [],
+  "businesses": [],
+  "checklist": [
+    {"title": "确认景区预约与开放状态", "detail": "以官方渠道信息为准；本清单项为结构示例", "date": "2026-09-21"}
+  ],
+  "evidence": [
+    {"topic": "高原节奏", "claim": "首日抵达后应留白休息，再逐步增加活动强度", "summary": "示例证据卡：真实攻略应在此引用来源笔记摘要并标注置信度", "checked_at": "2026-09-23", "confidence": "low", "caveat": "结构示例，不是实际调研结论；健康问题请咨询专业人员", "source_ids": ["sample-note", "sample-general"]}
+  ],
+  "images": [],
+  "avoid": [
+    {"wrong": "把此 JSON 样例当成完成调研的西藏攻略", "right": "替换占位来源、核实适应安排与交通，再运行构建", "source_ids": ["sample-general"]}
+  ],
+  "tips": [
+    "本样例的地点、日期、路线和节奏仅展示数据结构，不是已研究或已核实的出行建议。",
+    "高原环境涉及个体健康差异；出行前查阅权威信息，并针对个人情况向专业医务人员咨询。",
+    "出发前确认景区预约、开放状态、交通班次、道路天气和保险要求。"
+  ],
+  "assumptions": ["此示例不是已完成调研的攻略；请勿据此直接出行。"]
+}

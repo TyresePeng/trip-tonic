@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "destination": "拉萨（虚构示例）",
+    "created_at": "2026-09-20",
+    "trip_days": 7,
+    "party_summary": "2 位成人 + 1 位 65 岁老人，节奏适中（虚构示例，非真实研究）",
+    "output_dir": "./trip-tonic-output/example/"
+  },
+  "searches": [
+    {"query": "拉萨 7天 行程 避坑", "topic": "itinerary", "filters": "按最近发布排序", "checked_at": "2026-09-20", "result_count": 42, "candidate_ids": ["note-001", "note-002"], "notes": "去重后保留首屏与长尾样本"},
+    {"query": "拉萨 亲子 轻松路线", "topic": "attractions", "checked_at": "2026-09-20", "result_count": 30, "candidate_ids": ["note-003"], "notes": "覆盖节奏适配样本"},
+    {"query": "高原反应 老人 预防", "topic": "conditions", "checked_at": "2026-09-20", "result_count": 55, "candidate_ids": ["note-004"], "notes": "健康类内容仅作体验证据，不作医疗建议"},
+    {"query": "拉萨 市区 住宿 区域推荐", "topic": "lodging", "checked_at": "2026-09-20", "result_count": 28, "candidate_ids": ["note-005"], "notes": "关注商业推广风险"},
+    {"query": "八廓街 美食 小吃", "topic": "food", "checked_at": "2026-09-20", "result_count": 36, "candidate_ids": ["note-006"], "notes": "记录用户报价"},
+    {"query": "布达拉宫 预约 近期", "topic": "pitfalls", "filters": "半年内发布", "checked_at": "2026-09-20", "result_count": 48, "candidate_ids": ["note-007"], "notes": "预约规则需官方核实"},
+    {"query": "拉萨 周边 一日游 交通", "topic": "transport", "checked_at": "2026-09-20", "result_count": 22, "candidate_ids": ["note-008", "note-009"], "notes": "自驾时长普遍缺来源"}
+  ],
+  "notes": [
+    {"source_id": "note-001", "title": "（虚构示例）首日留白的亲历笔记", "checked_at": "2026-09-20", "inspection": "comments_opened", "commercial_context": "none_observed", "first_hand_context": "作者描述首日抵达后只安排入住与休息", "media": [{"type": "image", "url": "https://sns-img.example.com/fictional-day1-arrival.jpg", "description": "（虚构示例）笔记首图：抵达当日酒店窗外街景"}]},
+    {"source_id": "note-002", "title": "（虚构示例）7 天往返路线复盘", "checked_at": "2026-09-20", "inspection": "comments_opened", "commercial_context": "none_observed", "first_hand_context": "作者列出逐日安排与实际耗时", "media": [{"type": "video", "url": "https://sns-video.example.com/fictional-route-review.mp4", "description": "（虚构示例）路线复盘视频"}]},
+    {"source_id": "note-003", "title": "（虚构示例）带老人出行节奏记录", "checked_at": "2026-09-20", "inspection": "comments_opened", "commercial_context": "none_observed", "first_hand_context": "作者每天只安排上午一个主要点位"},
+    {"source_id": "note-004", "title": "（虚构示例）高原反应经历与应对", "checked_at": "2026-09-20", "inspection": "comments_opened", "commercial_context": "unknown", "first_hand_context": "多位评论者复述了抵达首晚的头痛情况"},
+    {"source_id": "note-005", "title": "（虚构示例）市区住宿区域比较", "checked_at": "2026-09-20", "inspection": "comments_opened", "commercial_context": "suspected", "first_hand_context": "疑似民宿推广，仅保留区域结论"},
+    {"source_id": "note-006", "title": "（虚构示例）八廓街周边小吃记录", "checked_at": "2026-09-20", "inspection": "full_note_opened", "commercial_context": "none_observed", "first_hand_context": "作者记录了甜茶馆与藏面的用户报价"},
+    {"source_id": "note-007", "title": "（虚构示例）布宫预约流程变化", "checked_at": "2026-09-20", "inspection": "full_note_opened", "commercial_context": "none_observed", "first_hand_context": "作者描述了当月预约渠道变化"},
+    {"source_id": "note-008", "title": "（虚构示例）周边一日游包车体验", "checked_at": "2026-09-20", "inspection": "full_note_opened", "commercial_context": "disclosed", "first_hand_context": "作者说明与车队有合作，仅取时间数据"},
+    {"source_id": "note-009", "title": "（虚构示例）市区公交与打车", "checked_at": "2026-09-20", "inspection": "full_note_opened", "commercial_context": "none_observed", "first_hand_context": "作者对比了公交与打车耗时"}
+  ],
+  "evidence_cards": [
+    {"id": "ev-001", "topic": "行程节奏", "claim": "首日抵达后仅安排入住与休息是被多篇笔记复述的做法", "confidence": "medium", "checked_at": "2026-09-20", "source_ids": ["note-001", "note-002"], "caveat": "体验类证据，不含医疗判断"},
+    {"id": "ev-002", "topic": "预约", "claim": "布宫预约渠道近期有变化，需官方渠道核实", "confidence": "low", "checked_at": "2026-09-20", "source_ids": ["note-007"], "caveat": "规则随季节调整"},
+    {"id": "ev-003", "topic": "交通", "claim": "周边一日游自驾/包车时长缺少可靠来源", "confidence": "low", "checked_at": "2026-09-20", "source_ids": ["note-008"], "caveat": "合作内容，时间数据仅供参考"}
+  ],
+  "decisions": [
+    {"decision_id": "dec-001", "candidate": "首日仅安排抵达、入住与休息", "party_fit": "must", "reason": "同行有 65 岁老人，多篇笔记建议首日留白", "supporting_evidence_ids": ["ev-001"], "source_ids": ["note-001", "note-002"], "confidence": "medium"},
+    {"decision_id": "dec-002", "candidate": "布宫预约", "party_fit": "recommended", "reason": "必去点位但预约规则待核实", "supporting_evidence_ids": ["ev-002"], "source_ids": ["note-007"], "confidence": "low", "unresolved_checks": ["出发前一周在官方渠道确认预约流程"]},
+    {"decision_id": "dec-003", "candidate": "周边一日游", "party_fit": "optional", "reason": "交通时长缺来源，列为备选并标注待核实", "supporting_evidence_ids": ["ev-003"], "source_ids": ["note-008"], "confidence": "low", "backup": "天气或状态不佳时改为市区室内活动"}
+  ],
+  "disagreements": [
+    {"topic": "周边一日游是否值得", "supporting": ["note-008"], "contrary": ["note-003"], "differences": "同行人构成不同：带老人笔记倾向放弃远郊", "treatment": "列为 optional 并保留市区备选", "remaining_check": "实时路况与自驾时长"}
+  ],
+  "gaps": [
+    "自驾路段里程与时长均无可靠来源，构建时将显示待核实警告",
+    "住宿仅区域结论，无具体酒店候选",
+    "本示例为虚构工作流演示，不可作为真实研究记录使用"
+  ]
+}

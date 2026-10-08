@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.8", "3.10", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate examples
+        shell: bash
+        run: |
+          python scripts/trip_tonic.py validate examples/guide-template.json
+          python scripts/trip_tonic.py validate examples/tibet-7-days.json
+      - name: Lint research record example
+        shell: bash
+        run: |
+          python scripts/trip_tonic.py lint-research examples/research-record.example.json
+          python scripts/trip_tonic.py lint-research examples/research-record.example.json --strict
+      - name: Build example guide
+        shell: bash
+        run: |
+          python scripts/trip_tonic.py build examples/tibet-7-days.json --output-dir build-sample
+          test -f build-sample/guide.html && test -f build-sample/guide.ics && test -f build-sample/guide.kml
+      - name: Upload build sample
+        if: matrix.python-version == '3.12' && runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-sample
+          path: build-sample/

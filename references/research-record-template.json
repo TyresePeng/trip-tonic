@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "destination": "请替换：目的地",
+    "created_at": "2026-01-01",
+    "trip_days": 5,
+    "party_summary": "请替换：同行人画像摘要（年龄、体力、节奏、饮食与无障碍需求）",
+    "output_dir": "请替换：本次行程的输出目录"
+  },
+  "searches": [
+    {
+      "query": "请替换：检索词（按行程天数分档覆盖主题矩阵：行程/景点/美食/住宿/交通/近期状况/避坑；出境游另加当地语言或英文检索）",
+      "checked_at": "2026-01-01",
+      "topic": "itinerary",
+      "filters": "请替换：所用排序/日期过滤（如：按最近发布排序）；adapter 不支持或未使用则留空",
+      "result_count": 0,
+      "candidate_ids": [],
+      "notes": "请替换：覆盖情况、错误、重复与去重说明"
+    }
+  ],
+  "notes": [
+    {
+      "source_id": "请替换：本地稳定 ID",
+      "title": "请替换：实际返回的笔记标题",
+      "url": "",
+      "checked_at": "2026-01-01",
+      "inspection": "search_card_only",
+      "commercial_context": "unknown",
+      "first_hand_context": "请替换：作者亲历内容，或 unknown"
+    }
+  ],
+  "evidence_cards": [
+    {
+      "id": "请替换：证据 ID",
+      "claim": "请替换：一条窄口径断言",
+      "confidence": "low",
+      "checked_at": "2026-01-01",
+      "source_ids": ["请替换：source_id"],
+      "caveat": "请替换：范围与局限"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "请替换：决策 ID",
+      "candidate": "请替换：候选（景点/路段/住宿区域/餐饮/服务）",
+      "party_fit": "optional",
+      "reason": "请替换：与同行人约束的关联",
+      "source_ids": ["请替换：source_id"],
+      "confidence": "low"
+    }
+  ],
+  "disagreements": [
+    {
+      "topic": "请替换：存在分歧的断言",
+      "supporting": ["请替换：source_id"],
+      "contrary": ["请替换：source_id"],
+      "treatment": "请替换：保留双方/降低置信度/弹性安排"
+    }
+  ],
+  "gaps": ["请替换：未能核实的事项；没有缺口也应显式写明"]
+}

@@ -180,7 +180,7 @@ class TripTonicTests(unittest.TestCase):
         self.assertNotIn("FOOD_SHOP_MISSING", codes)
         self.assertNotIn("VISUALS_MISSING", codes)
         text = markdown_text(guide)
-        self.assertIn("## 媒体与视频链接", text)
+        self.assertIn("## 旅行影像", text)
         self.assertIn("山谷公路与远处雪山", text)
         self.assertIn("(https://example.com/note.jpg)", text)
         self.assertIn("里程待核实", text)
@@ -198,7 +198,7 @@ class TripTonicTests(unittest.TestCase):
         # 视觉层已收敛为本地图片+媒体相册：无素材时纯文字，不再生成插画区
         self.assertNotIn("图片示例", rendered)
         self.assertNotIn('<svg class="illustration"', rendered)
-        self.assertNotIn("媒体与视频链接", rendered)
+        self.assertNotIn("旅行影像", rendered)
         self.assertIn("VISUALS_MISSING", rendered)
         self.assertIn("DRIVE_DURATION_MISSING", rendered)
         self.assertIn("RECOMMENDATIONS_MISSING", rendered)
@@ -519,7 +519,7 @@ class TripTonicTests(unittest.TestCase):
             {"type": "video", "url": "https://sns-video.example.com/arrival.mp4"},
         ]
         rendered = html_text(guide, validate_guide(guide))
-        self.assertIn("媒体与视频链接", rendered)
+        self.assertIn("旅行影像", rendered)
         self.assertIn("sns-img.example.com/park.jpg", rendered)
         self.assertIn("sns-video.example.com/arrival.mp4", rendered)
         self.assertIn("湖边清晨", rendered)
@@ -527,13 +527,52 @@ class TripTonicTests(unittest.TestCase):
         self.assertIn("www.xiaohongshu.com/note/demo", rendered)
         self.assertIn("媒体链接", rendered.split("</table>")[0])
         text = markdown_text(guide)
-        self.assertIn("## 媒体与视频链接", text)
+        self.assertIn("## 旅行影像", text)
         self.assertIn("](https://sns-img.example.com/park.jpg)", text)
         self.assertIn("](https://sns-video.example.com/arrival.mp4)", text)
         self.assertIn("- **[图片]** 湖边清晨", text)
         guide["meta"]["language"] = "en-US"
-        self.assertIn("Media &amp; Video Links", html_text(guide, validate_guide(guide)))
-        self.assertIn("## Media & Video Links", markdown_text(guide))
+        self.assertIn("Travel Photos &amp; Videos", html_text(guide, validate_guide(guide)))
+        self.assertIn("## Travel Photos & Videos", markdown_text(guide))
+
+    def test_album_folding_markup(self):
+        """媒体多时相册两级折叠：分区默认显示前 3 组、组内默认显示
+        前 4 张，各级带 查看更多/收起 按钮；组网格用 auto-fill，
+        单张图片不再被拉伸占满整行。"""
+        from scripts.trip_tonic import html_text
+
+        guide = sample_guide()
+        resolved = {}
+        for i in range(5):
+            guide["sources"].append({
+                "id": "xhs-%d" % (i + 2), "title": "笔记%d" % (i + 1),
+                "url": "https://www.xiaohongshu.com/note/%d" % (i + 1),
+                "type": "user", "checked_at": "2026-09-22",
+                "media": [{"type": "image", "url": "https://img.example.com/%d-%d.jpg" % (i, j), "description": "图 %d" % j} for j in range(5)],
+            })
+            for j in range(5):
+                resolved["https://img.example.com/%d-%d.jpg" % (i, j)] = {"kind": "image", "src": "data:image/png;base64,AAAA"}
+        rendered = html_text(guide, validate_guide(guide), media_resolved=resolved)
+        # 概览行（含头部切换按钮）
+        self.assertIn('class="media-summary"', rendered)
+        self.assertIn("共 5 篇笔记 · 25 项", rendered)
+        # 分区级折叠：5 组 > 3，默认收起后 2 组；头部与底部各一个切换按钮
+        self.assertIn('class="media-groups media-folded"', rendered)
+        self.assertIn("查看更多（还有 2 篇）", rendered)
+        self.assertIn('class="media-toggle media-toggle-end"', rendered)
+        self.assertIn("收起", rendered)
+        # 组内折叠：每组 5 张 > 4，均有展开按钮（文案在 data-more 属性与按钮文本各出现一次）
+        self.assertEqual(rendered.count('class="media-more"'), 5)
+        self.assertEqual(rendered.count("查看全部 5 项"), 10)
+        # 折叠样式与脚本
+        self.assertIn(".media-groups.folded .media-group:nth-child(n+4){display:none}", rendered)
+        self.assertIn(".media-group.folded .media-thumb:nth-child(n+5){display:none}", rendered)
+        self.assertIn(".media-groups.media-folded~.media-toggle-end{display:none}", rendered)
+        self.assertIn(".media-group.folded", rendered.split("</style>")[0])
+        # 组网格 auto-fill：单图不整行拉伸
+        self.assertIn("grid-template-columns:repeat(auto-fill,minmax(200px,1fr))", rendered)
+        # 折叠脚本就位（分区级按钮批量绑定）
+        self.assertIn('document.querySelectorAll(".media-toggle")', rendered)
 
     def test_item_source_links_render_as_real_anchors(self):
         from scripts.trip_tonic import html_text

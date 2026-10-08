@@ -85,6 +85,16 @@ _CSS = (
     ".media-group{margin:16px 0 4px}"
     ".media-group-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:0 0 10px}"
     ".media-group-head strong{font-size:.98rem}"
+    ".media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}"
+    ".media-groups.folded .media-group:nth-child(n+4){display:none}"
+    ".media-group.folded .media-thumb:nth-child(n+5){display:none}"
+    ".media-more,.media-toggle{background:none;border:1px solid #cfd9d2;border-radius:999px;padding:6px 18px;color:#467263;cursor:pointer;font-size:.85rem}"
+    ".media-more:hover,.media-toggle:hover{background:#eef4f0}"
+    ".media-more{margin-top:8px}"
+    ".media-summary{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 4px}"
+    ".media-toggle{display:inline-block;margin:0}"
+    ".media-toggle-end{display:block;margin:16px 0 4px}"
+    ".media-groups.media-folded~.media-toggle-end{display:none}"
     ".media-links{list-style:none;padding:0;margin:14px 0 0;font-size:.9rem}"
     ".media-links li{margin:6px 0}"
     ".lightbox{position:fixed;inset:0;background:rgba(13,21,18,.94);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:50;padding:20px}"
@@ -491,18 +501,54 @@ _LIGHTBOX_JS = """(function () {
   });
 })();"""
 
+# 相册折叠脚本：分区级（媒体多时默认只显示前几组）与组内级
+# （每组默认只显示前几张）；分区头与底部各有一个切换按钮，
+# 点击任意一个同步全部按钮文案。文案由 data-more/data-less
+# 提供，切换时写 textContent，不经过 innerHTML。
+_ALBUM_JS = """(function () {
+  "use strict";
+  var wrap = document.getElementById("media-groups");
+  if (wrap) {
+    Array.prototype.forEach.call(document.querySelectorAll(".media-toggle"), function (btn) {
+      btn.addEventListener("click", function () {
+        var folded = wrap.classList.toggle("media-folded");
+        Array.prototype.forEach.call(document.querySelectorAll(".media-toggle"), function (other) {
+          other.textContent = folded ? other.getAttribute("data-more") : other.getAttribute("data-less");
+        });
+      });
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".media-more"), function (btn) {
+    btn.addEventListener("click", function () {
+      var group = btn.closest(".media-group");
+      var folded = group.classList.toggle("folded");
+      btn.textContent = folded ? btn.getAttribute("data-more") : btn.getAttribute("data-less");
+    });
+  });
+})();"""
+
+
+# 相册折叠阈值：默认只展示前 3 个笔记分组、每组前 4 张，
+# 其余收进"查看更多"；避免媒体多时相霸占整篇攻略。
+_MEDIA_GROUPS_PREVIEW = 3
+_MEDIA_GROUP_PREVIEW = 4
+
 
 def _media_section_html(guide, sources, media_resolved=None):
     """媒体区：按来源笔记分组的相册（卡片样式与图文区一致：
     上图下文说明），点击开灯箱组内循环翻页；未缓存条目回退链接
     （有相册时为紧凑行列表，无相册时保持原有大卡片）。
 
+    内容多时两级折叠：分区级默认显示前 _MEDIA_GROUPS_PREVIEW 组
+    （"查看更多"展开），组内级默认显示前 _MEDIA_GROUP_PREVIEW 张
+    （"查看全部 N 项"展开）。
+
     媒体本地化只服务个人离线参考：版权归属原作者，分组头与灯箱
     都保留来源笔记回链；图片以 data URI 内嵌，视频以产物目录
     media/ 下的相对路径引用（需连同目录保存）。
     """
     resolved_map = media_resolved or {}
-    groups_html, groups_payload, uncached = [], [], []
+    groups_html, groups_payload, uncached, total_items = [], [], [], 0
     for source in guide.get("sources", []):
         if not isinstance(source, dict) or not isinstance(source.get("media"), list):
             continue
@@ -534,20 +580,45 @@ def _media_section_html(guide, sources, media_resolved=None):
             head = '<strong><a href="{}" target="_blank" rel="noopener">{}</a></strong> <span class="muted">{}</span>'.format(_esc(source["url"]), _esc(source_title), count_label)
         else:
             head = "<strong>{}</strong> <span class=\"muted\">{}</span>".format(_esc(source_title), count_label)
-        groups_html.append('<div class="media-group"><div class="media-group-head">{}</div><div class="grid">{}</div></div>'.format(head, "".join(figures)))
+        # 组内折叠：超过预览张数时默认只显示前几张
+        group_classes = "media-group"
+        group_tail = ""
+        if len(items_payload) > _MEDIA_GROUP_PREVIEW:
+            group_classes += " folded"
+            more_label = _esc(tr(guide, "media_more_group").format(len(items_payload)))
+            less_label = _esc(tr(guide, "media_less"))
+            group_tail = '<button class="media-more" type="button" data-more="{}" data-less="{}">{}</button>'.format(more_label, less_label, more_label)
+        groups_html.append('<div class="{}"><div class="media-group-head">{}</div><div class="media-grid">{}</div>{}</div>'.format(group_classes, head, "".join(figures), group_tail))
         groups_payload.append({
             "sourceTitle": source_title,
             "sourceUrl": source.get("url") or "",
             "sourceLabel": tr(guide, "media_from_label"),
             "items": items_payload,
         })
+        total_items += len(items_payload)
     if not groups_html and not uncached:
         return ""
     parts = ['<section class="card"><h2>{}</h2>'.format(_esc(tr(guide, "h_media")))]
     if groups_html:
-        parts.extend(groups_html)
+        # 概览行：笔记数与媒体数；分组多时切换按钮放在头部，
+        # 收起不用滚到分区底部（底部另有一个展开后才出现的收起）
+        summary = '<span class="muted">{}</span>'.format(_esc(tr(guide, "media_summary").format(len(groups_payload), total_items)))
+        groups_classes = "media-groups"
+        top_toggle = ""
+        end_toggle = ""
+        if len(groups_html) > _MEDIA_GROUPS_PREVIEW:
+            groups_classes += " media-folded"
+            more_label = _esc(tr(guide, "media_more_sections").format(len(groups_html) - _MEDIA_GROUPS_PREVIEW))
+            less_label = _esc(tr(guide, "media_less"))
+            top_toggle = '<button class="media-toggle" type="button" data-more="{}" data-less="{}">{}</button>'.format(more_label, less_label, more_label)
+            end_toggle = '<button class="media-toggle media-toggle-end" type="button" data-more="{}" data-less="{}">{}</button>'.format(more_label, less_label, less_label)
+        parts.append('<div class="media-summary">{}{}</div>'.format(summary, top_toggle))
+        parts.append('<div class="{}" id="media-groups">{}</div>'.format(groups_classes, "".join(groups_html)))
+        if end_toggle:
+            parts.append(end_toggle)
         payload = json.dumps(groups_payload, ensure_ascii=False).replace("</", "<\\/")
         parts.append("<script>{}</script>".format(_LIGHTBOX_JS.replace("__MEDIA_GROUPS__", payload)))
+        parts.append("<script>{}</script>".format(_ALBUM_JS))
     if uncached:
         if groups_html:
             # 混合场景：未命中条目收敛为一行式紧凑链接

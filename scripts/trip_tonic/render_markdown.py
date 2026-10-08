@@ -131,7 +131,7 @@ def markdown_text(guide, report=None, media_resolved=None):
             if image.get("caption"):
                 lines.append("*{}*".format(image["caption"]))
         lines.append("")
-    # ---- 媒体与视频链接（研究采集的直链卡片） ----
+    # ---- 旅行影像（研究采集的直链卡片） ----
     media_lines = _media_lines(guide, media_resolved)
     if media_lines:
         lines.extend(["## " + tr(guide, "h_media"), ""])
